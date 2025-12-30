@@ -26,3 +26,7 @@ This document describes all new features and changes in the release. The format 
 ### Documentation
 
 - [#319](https://github.com/nautobot/cookiecutter-nautobot-app/issues/319) - Fixed nav typo and added missing 2.7.2 release notes.
+
+### Housekeeping
+
+- [#322](https://github.com/nautobot/cookiecutter-nautobot-app/issues/322) - Updated CI workflow to always regenerate poetry lockfile.

@@ -1,5 +1,8 @@
 ---
-name: "Bake templates"
+name: "Bake templates and run initial tests"
+concurrency:  # Cancel any existing runs of this workflow for this same PR
+  group: "${{ github.workflow }}-${{ github.ref }}"
+  cancel-in-progress: true
 on: # yamllint disable-line rule:truthy rule:comments
   pull_request: ~
   workflow_dispatch: ~

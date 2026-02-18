@@ -5,8 +5,21 @@ on: # yamllint disable-line rule:truthy rule:comments
   workflow_dispatch: ~
 
 jobs:
-  bake-nautobot-app:
+  bake:
     runs-on: "ubuntu-latest"
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - template: "nautobot-app"
+            project_slug: "nautobot-app-my-app"
+            invoke_local_env: "INVOKE_MY_APP_LOCAL=True"
+          - template: "nautobot-app-ssot"
+            project_slug: "nautobot-app-ssot-system-of-record"
+            invoke_local_env: "INVOKE_NAUTOBOT_SSOT_SYSTEM_OF_RECORD_LOCAL=True"
+          - template: "nautobot-app-chatops"
+            project_slug: "nautobot-app-chatops-my-app"
+            invoke_local_env: "INVOKE_NAUTOBOT_CHATOPS_MY_APP_LOCAL=True"
     steps:
       - name: "Check out repository code"
         uses: "actions/checkout@v4"
@@ -14,59 +27,14 @@ jobs:
         uses: "networktocode/gh-action-setup-poetry-environment@v6"
         with:
           poetry-version: "2.1.3"
-      - name: "Bake nautobot-app template"
-        run: "poetry run cookiecutter ./nautobot-app --no-input --output-dir ./baked/nautobot-app"
+      - name: "Bake ${{ matrix.template }} template"
+        run: "poetry run cookiecutter ./${{ matrix.template }} --no-input --output-dir ./baked/${{ matrix.template }}"
       - name: "Install baked project dependencies"
-        working-directory: "baked/nautobot-app/nautobot-app-my-app"
+        working-directory: "baked/${{ matrix.template }}/${{ matrix.project_slug }}"
         run: "poetry install"
       - name: "Build and test baked project"
-        working-directory: "baked/nautobot-app/nautobot-app-my-app"
-        env:
-          INVOKE_MY_APP_LOCAL: "True"
+        working-directory: "baked/${{ matrix.template }}/${{ matrix.project_slug }}"
         run: |
-          poetry run invoke build
-          poetry run invoke tests
-
-  bake-nautobot-app-ssot:
-    runs-on: "ubuntu-latest"
-    steps:
-      - name: "Check out repository code"
-        uses: "actions/checkout@v4"
-      - name: "Setup Poetry"
-        uses: "networktocode/gh-action-setup-poetry-environment@v6"
-        with:
-          poetry-version: "2.1.3"
-      - name: "Bake nautobot-app-ssot template"
-        run: "poetry run cookiecutter ./nautobot-app-ssot --no-input --output-dir ./baked/nautobot-app-ssot"
-      - name: "Install baked project dependencies"
-        working-directory: "baked/nautobot-app-ssot/nautobot-app-ssot-system-of-record"
-        run: "poetry install"
-      - name: "Build and test baked project"
-        working-directory: "baked/nautobot-app-ssot/nautobot-app-ssot-system-of-record"
-        env:
-          INVOKE_NAUTOBOT_SSOT_SYSTEM_OF_RECORD_LOCAL: "True"
-        run: |
-          poetry run invoke build
-          poetry run invoke tests
-
-  bake-nautobot-app-chatops:
-    runs-on: "ubuntu-latest"
-    steps:
-      - name: "Check out repository code"
-        uses: "actions/checkout@v4"
-      - name: "Setup Poetry"
-        uses: "networktocode/gh-action-setup-poetry-environment@v6"
-        with:
-          poetry-version: "2.1.3"
-      - name: "Bake nautobot-app-chatops template"
-        run: "poetry run cookiecutter ./nautobot-app-chatops --no-input --output-dir ./baked/nautobot-app-chatops"
-      - name: "Install baked project dependencies"
-        working-directory: "baked/nautobot-app-chatops/nautobot-app-chatops-my-app"
-        run: "poetry install"
-      - name: "Build and test baked project"
-        working-directory: "baked/nautobot-app-chatops/nautobot-app-chatops-my-app"
-        env:
-          INVOKE_NAUTOBOT_CHATOPS_MY_APP_LOCAL: "True"
-        run: |
+          export ${{ matrix.invoke_local_env }}
           poetry run invoke build
           poetry run invoke tests

@@ -13,13 +13,13 @@ jobs:
         include:
           - template: "nautobot-app"
             project_slug: "nautobot-app-my-app"
-            invoke_local_env: "INVOKE_MY_APP_LOCAL=True"
+            invoke_local_env: "INVOKE_MY_APP_LOCAL"
           - template: "nautobot-app-ssot"
             project_slug: "nautobot-app-ssot-system-of-record"
-            invoke_local_env: "INVOKE_NAUTOBOT_SSOT_SYSTEM_OF_RECORD_LOCAL=True"
+            invoke_local_env: "INVOKE_NAUTOBOT_SSOT_SYSTEM_OF_RECORD_LOCAL"
           - template: "nautobot-app-chatops"
             project_slug: "nautobot-app-chatops-my-app"
-            invoke_local_env: "INVOKE_NAUTOBOT_CHATOPS_MY_APP_LOCAL=True"
+            invoke_local_env: "INVOKE_NAUTOBOT_CHATOPS_MY_APP_LOCAL"
     steps:
       - name: "Check out repository code"
         uses: "actions/checkout@v4"
@@ -35,6 +35,6 @@ jobs:
       - name: "Build and test baked project"
         working-directory: "baked/${{ matrix.template }}/${{ matrix.project_slug }}"
         run: |
-          export ${{ matrix.invoke_local_env }}
+          export ${{ matrix.invoke_local_env }}=True
           poetry run invoke build
           poetry run invoke tests

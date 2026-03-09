@@ -46,4 +46,4 @@ jobs:
         run: "poetry run invoke ruff --fix"
       - name: "Test baked project"
         working-directory: "baked/${{ matrix.template }}/${{ matrix.project_slug }}"
-        run: "export ${{ matrix.invoke_local_env }}=True && poetry run invoke tests"
+        run: "poetry run invoke tests"

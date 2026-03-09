@@ -38,7 +38,7 @@ jobs:
       - name: "Build project"
         working-directory: "baked/${{ matrix.template }}/${{ matrix.project_slug }}"
         run: "poetry run invoke build"
-      - name: "Create initial migrations and fix ruff errors"
+      - name: "Create initial migrations"
         working-directory: "baked/${{ matrix.template }}/${{ matrix.project_slug }}"
         run: "poetry run invoke makemigrations"
       - name: "Fix ruff errors"

@@ -40,4 +40,6 @@ jobs:
         run: |
           export ${{ matrix.invoke_local_env }}=True
           poetry run invoke build
+          poetry run invoke makemigrations
+          poetry run invoke ruff --fix
           poetry run invoke tests

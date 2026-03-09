@@ -35,11 +35,15 @@ jobs:
       - name: "Install baked project dependencies"
         working-directory: "baked/${{ matrix.template }}/${{ matrix.project_slug }}"
         run: "poetry install"
-      - name: "Build project, create initial migrations and fix ruff errors"
+      - name: "Build project"
         working-directory: "baked/${{ matrix.template }}/${{ matrix.project_slug }}"
-        run: poetry run invoke build makemigrations ruff --fix
+        run: "poetry run invoke build"
+      - name: "Create initial migrations and fix ruff errors"
+        working-directory: "baked/${{ matrix.template }}/${{ matrix.project_slug }}"
+        run: "poetry run invoke makemigrations"
+      - name: "Fix ruff errors"
+        working-directory: "baked/${{ matrix.template }}/${{ matrix.project_slug }}"
+        run: "poetry run invoke ruff --fix"
       - name: "Test baked project"
         working-directory: "baked/${{ matrix.template }}/${{ matrix.project_slug }}"
-        run: |
-          export ${{ matrix.invoke_local_env }}=True
-          poetry run invoke tests
+        run: "export ${{ matrix.invoke_local_env }}=True && poetry run invoke tests"

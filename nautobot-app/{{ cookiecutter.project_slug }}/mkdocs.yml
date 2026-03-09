@@ -133,7 +133,5 @@ nav:
       - Code Reference:
           - "dev/code_reference/index.md"
           - Package: "dev/code_reference/package.md"
-          {%- if cookiecutter.model_class_name != "None" %}
           - API: "dev/code_reference/api.md"
-          {%- endif %}
   - Nautobot Docs Home ↗︎: "{{ cookiecutter.docs_base_url }}"

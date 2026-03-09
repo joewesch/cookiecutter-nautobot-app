@@ -55,7 +55,6 @@ if __name__ == "__main__":
 
         (_PROJECT_PATH / "docs/models/{{ cookiecutter.model_class_name.lower() }}.md").unlink()
         (_PROJECT_PATH / "docs/models").rmdir()
-        (_PROJECT_PATH / "docs/dev/code_reference/api.md").unlink()
 
     # Persist the baked cookie parameters in-repo for future usage as a replay file or for the drift management.
     cookie = {{ cookiecutter }}
